@@ -1,5 +1,5 @@
 class ScalarKFilter():
-    def __init__(self, a, v_variance, v_mean, c, w_variance,w_mean, state=None):
+    def __init__(self, a, v_variance, v_mean, c, w_variance,w_mean, state=None, estimationVariance=0):
         """
         Initialize the Kalman filter based on the following model
         x_{k+1} = a * x_k + v
@@ -21,7 +21,7 @@ class ScalarKFilter():
             self.state = 0
         else:
             self.state = state
-        self.estimationVariance = 0
+        self.estimationVariance = estimationVariance
 
 
     def predict(self):
