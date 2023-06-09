@@ -52,41 +52,79 @@ def main():
   estimationVariance = float(args.estimationVariance)
   obj = skf.ScalarKFilter(a, v_variance, v_mean, c, w_variance, w_mean, Initial_state, estimationVariance)
   run(obj)
+import csv
+import matplotlib.pyplot as plt
+
 def run(skf):
-    """Read measurements from a file or prompt the user for a measurement and update the filter"""
-    # Check if the measurements file exists
-    if os.path.isfile("measurements.txt"):
-        # Read measurements from the file
-        with open("measurements.txt", "r") as file:
-            measurements = [float(line.strip()) for line in file]
+    """Read measurements from a CSV file or text file, update the filter, and plot the difference"""
 
-        # Run the filter on the measurements
-        filter_states = []
-        for measurement in measurements:
-            skf.predict()
-            skf.update(measurement)
-            filter_states.append(skf.state)
-            print("State:", skf.state)
-
-        show_plot(len(measurements),filter_states, measurements)
-
-    else:
-        # Continuously prompt the user for a measurement and update the filter
-        while True:
-            try:
-                measurement = input("Enter a measurement or hit q to quit: ")
-                if measurement == 'q':
-                    exit()
-                measurement = float(measurement)
+    try:
+        with open("measurements.csv", "r") as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip the header row
+            measurements = []
+            true_states = []
+            for row in reader:
+                timestep = int(row[0])
+                true_state = float(row[1])
+                measurement = float(row[2])
                 skf.predict()
                 skf.update(measurement)
-                print("State:", skf.state)
-            except ValueError:
-                print("Please enter a valid number")
-                continue
-            except KeyboardInterrupt:
-                print("Exiting...")
-                break
+                filtered_state = skf.state
+                difference = filtered_state - true_state
+                print("Time Step:", timestep)
+                print("Measurement:", measurement)
+                print("True State:", true_state)
+                print("Filtered State:", filtered_state)
+                print("Difference:", difference)
+                print("---------------------")
+                measurements.append(measurement)
+                true_states.append(true_state)
+
+            # Plot the difference
+            plt.plot(measurements, label="Measurements")
+            plt.plot(true_states, label="True States")
+            plt.xlabel("Time Step")
+            plt.ylabel("Value")
+            plt.title("Measurements and True States")
+            plt.legend()
+            plt.show()
+    except FileNotFoundError:
+        try:
+            with open("measurements.txt", "r") as file:
+                lines = file.readlines()
+                for line in lines:
+                    measurement = float(line.strip())
+                    skf.predict()
+                    skf.update(measurement)
+                    print("Measurement:", measurement)
+                    print("State: ", skf.state)
+                    print("---------------------")
+        except FileNotFoundError:
+            print("No measurement file found. Please provide measurements:")
+
+            while True:
+                try:
+                    measurement = input("Enter a measurement or hit q to quit: ")
+                    if measurement == 'q':
+                        exit()
+                    measurement = float(measurement)
+                    skf.predict()
+                    skf.update(measurement)
+                    print("State: ", skf.state)
+                except ValueError:
+                    print("Please enter a valid number")
+                    continue
+                except KeyboardInterrupt:
+                    print("Exiting...")
+                    break
+
+# Usage example
+# Initialize the Kalman filter object (skf) and other necessary components
+# ...
+# Run the filter
+# run(skf)
+
 
 def show_plot(num_steps, filtered_states, measurements):
     plt.figure(figsize=(10, 6))
