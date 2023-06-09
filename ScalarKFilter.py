@@ -1,3 +1,6 @@
+from matplotlib import pyplot as plt
+
+
 class ScalarKFilter():
     def __init__(self, a, v_variance, v_mean, c, w_variance,w_mean, state=None, estimationVariance=0):
         """
@@ -34,4 +37,5 @@ class ScalarKFilter():
         innovation = measurement - self.c * self.state - self.w_mean
         self.state = self.state + self.K * innovation
         self.estimationVariance = (1 - self.K * self.c) * self.estimationVariance
+
 
