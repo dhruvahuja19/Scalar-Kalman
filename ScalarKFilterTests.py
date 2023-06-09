@@ -25,10 +25,10 @@ class MyTestCase(unittest.TestCase):
         num_steps = 100
         initial_state_mean = 20.0  # Initial state mean
         initial_state_var = 5.0  # Initial state variance
-        process_noise_mean = 0.0  # Process noise mean
-        process_noise_var = 0.1  # Process noise variance
-        measurement_noise_mean = 0.0  # Measurement noise mean
-        measurement_noise_var = 1.0  # Measurement noise variance
+        process_noise_mean = 0  # Process noise mean
+        process_noise_var = .1  # Process noise variance
+        measurement_noise_mean = 5  # Measurement noise mean
+        measurement_noise_var = 2  # Measurement noise variance
         a = 0.9  # Dynamics parameter
         c = 1.2  # Observation parameter
 

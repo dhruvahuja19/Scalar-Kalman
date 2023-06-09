@@ -34,10 +34,10 @@ def main():
                       help = 'Mean of the measurement noise',
                       required = False,
                       default= 0)
-  parser.add_argument('--Initial_state',help = 'Initial state of the system',
+  parser.add_argument('--initial_state',help = 'Initial state of the system',
                         required = False,
                         default= 0)
-  parser.add_argument('--estimationVariance',
+  parser.add_argument('--estimation_variance',
                       help = 'Initial estimation variance of the system',
                         required = False,
                         default= 0)
@@ -48,8 +48,8 @@ def main():
   c = float(args.c)
   w_variance = float(args.w_variance)
   w_mean = float(args.w_mean)
-  Initial_state = float(args.Initial_state)
-  estimationVariance = float(args.estimationVariance)
+  Initial_state = float(args.initial_state)
+  estimationVariance = float(args.estimation_variance)
   obj = skf.ScalarKFilter(a, v_variance, v_mean, c, w_variance, w_mean, Initial_state, estimationVariance)
   run(obj)
 import csv
